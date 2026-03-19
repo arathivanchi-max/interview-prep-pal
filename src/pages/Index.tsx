@@ -2,14 +2,21 @@ import { useState, useMemo } from "react";
 import { questions, categories, difficulties, Difficulty } from "@/data/questions";
 import { QuestionCard } from "@/components/QuestionCard";
 import { ResultsSummary } from "@/components/ResultsSummary";
-import { Mic, Sparkles, Zap, Flame, Brain } from "lucide-react";
+import { Mic, Sparkles, Zap, Flame, Brain, Shield, Users, Lightbulb, MessageSquare, Target, Heart, Swords, Rocket, ChevronRight } from "lucide-react";
 
 type Phase = "home" | "practice" | "results";
 
-const difficultyConfig: Record<Difficulty, { icon: typeof Zap; color: string; activeColor: string }> = {
-  Easy: { icon: Zap, color: "text-success", activeColor: "text-success glow-primary" },
-  Medium: { icon: Flame, color: "text-primary", activeColor: "text-primary glow-primary" },
-  Hard: { icon: Brain, color: "text-accent", activeColor: "text-accent glow-accent" },
+const difficultyConfig: Record<Difficulty, { icon: typeof Zap; gradient: string; shadow: string; text: string }> = {
+  Easy: { icon: Zap, gradient: "from-emerald-500 to-teal-400", shadow: "shadow-[0_0_20px_-4px_hsl(152,60%,45%)]", text: "text-emerald-300" },
+  Medium: { icon: Flame, gradient: "from-amber-500 to-orange-400", shadow: "shadow-[0_0_20px_-4px_hsl(36,90%,55%)]", text: "text-amber-300" },
+  Hard: { icon: Brain, gradient: "from-rose-500 to-pink-400", shadow: "shadow-[0_0_20px_-4px_hsl(350,70%,55%)]", text: "text-rose-300" },
+};
+
+const categoryIcons: Record<string, typeof Shield> = {
+  Leadership: Shield, "Problem-Solving": Lightbulb, Collaboration: Users,
+  Adaptability: Rocket, Communication: MessageSquare, Delivery: Target,
+  "Customer Focus": Heart, "Conflict Resolution": Swords, Innovation: Sparkles,
+  "Strategic Thinking": Brain,
 };
 
 const Index = () => {
