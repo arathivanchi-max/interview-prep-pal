@@ -78,9 +78,17 @@ export function ResultsSummary({ ratings, onRestart }: ResultsSummaryProps) {
         {entries.map(({ question, rating }) => (
           <div key={question.id} className="glass rounded-xl p-4 flex items-center justify-between gap-3">
             <div className="flex-1 min-w-0">
-              <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
-                {question.category}
-              </span>
+              <div className="flex items-center gap-1.5">
+                <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
+                  {question.category}
+                </span>
+                <span className={`text-[10px] font-semibold ${
+                  question.difficulty === "Easy" ? "text-success" :
+                  question.difficulty === "Medium" ? "text-primary" : "text-accent"
+                }`}>
+                  · {question.difficulty}
+                </span>
+              </div>
               <p className="text-sm text-foreground truncate">{question.question}</p>
             </div>
             <div className="flex gap-1 shrink-0">
