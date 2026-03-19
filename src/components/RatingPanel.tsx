@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Star } from "lucide-react";
 
 interface RatingPanelProps {
@@ -16,28 +15,29 @@ export function RatingPanel({ onRate }: RatingPanelProps) {
   };
 
   return (
-    <div className="flex flex-col items-center gap-2 animate-fade-in-up">
+    <div className="flex flex-col items-center gap-3 animate-fade-in-up">
       <p className="text-sm font-medium text-muted-foreground">How did you do?</p>
-      <div className="flex gap-1">
-        {[1, 2, 3, 4, 5].map((n) => (
-          <Button
-            key={n}
-            variant="ghost"
-            size="icon"
-            className="h-10 w-10"
-            onMouseEnter={() => setHovered(n)}
-            onMouseLeave={() => setHovered(0)}
-            onClick={() => handleClick(n)}
-          >
-            <Star
-              className={`h-6 w-6 transition-colors ${
-                n <= (hovered || selected)
-                  ? "fill-accent text-accent"
-                  : "text-muted-foreground"
-              }`}
-            />
-          </Button>
-        ))}
+      <div className="flex gap-1.5">
+        {[1, 2, 3, 4, 5].map((n) => {
+          const active = n <= (hovered || selected);
+          return (
+            <button
+              key={n}
+              className="h-11 w-11 flex items-center justify-center rounded-xl glass transition-all duration-200 hover:scale-110"
+              onMouseEnter={() => setHovered(n)}
+              onMouseLeave={() => setHovered(0)}
+              onClick={() => handleClick(n)}
+            >
+              <Star
+                className={`h-6 w-6 transition-all duration-200 ${
+                  active
+                    ? "fill-primary text-primary drop-shadow-[0_0_6px_hsl(175,70%,50%)]"
+                    : "text-muted-foreground"
+                }`}
+              />
+            </button>
+          );
+        })}
       </div>
       {selected > 0 && (
         <p className="text-xs text-muted-foreground">
