@@ -82,9 +82,9 @@ export function ResultsSummary({ ratings, onRestart }: ResultsSummaryProps) {
                 <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold">
                   {question.category}
                 </span>
-                <span className={`text-[10px] font-semibold ${
-                  question.difficulty === "Easy" ? "text-success" :
-                  question.difficulty === "Medium" ? "text-primary" : "text-accent"
+                <span className={`text-[10px] font-bold ${
+                  question.difficulty === "Easy" ? "text-emerald-400" :
+                  question.difficulty === "Medium" ? "text-amber-400" : "text-rose-400"
                 }`}>
                   · {question.difficulty}
                 </span>
