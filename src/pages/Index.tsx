@@ -2,14 +2,21 @@ import { useState, useMemo } from "react";
 import { questions, categories, difficulties, Difficulty } from "@/data/questions";
 import { QuestionCard } from "@/components/QuestionCard";
 import { ResultsSummary } from "@/components/ResultsSummary";
-import { Mic, Sparkles, Zap, Flame, Brain } from "lucide-react";
+import { Mic, Sparkles, Zap, Flame, Brain, Shield, Users, Lightbulb, MessageSquare, Target, Heart, Swords, Rocket, ChevronRight } from "lucide-react";
 
 type Phase = "home" | "practice" | "results";
 
-const difficultyConfig: Record<Difficulty, { icon: typeof Zap; color: string; activeColor: string }> = {
-  Easy: { icon: Zap, color: "text-success", activeColor: "text-success glow-primary" },
-  Medium: { icon: Flame, color: "text-primary", activeColor: "text-primary glow-primary" },
-  Hard: { icon: Brain, color: "text-accent", activeColor: "text-accent glow-accent" },
+const difficultyConfig: Record<Difficulty, { icon: typeof Zap; gradient: string; shadow: string; text: string }> = {
+  Easy: { icon: Zap, gradient: "from-emerald-500 to-teal-400", shadow: "shadow-[0_0_20px_-4px_hsl(152,60%,45%)]", text: "text-emerald-300" },
+  Medium: { icon: Flame, gradient: "from-amber-500 to-orange-400", shadow: "shadow-[0_0_20px_-4px_hsl(36,90%,55%)]", text: "text-amber-300" },
+  Hard: { icon: Brain, gradient: "from-rose-500 to-pink-400", shadow: "shadow-[0_0_20px_-4px_hsl(350,70%,55%)]", text: "text-rose-300" },
+};
+
+const categoryIcons: Record<string, typeof Shield> = {
+  Leadership: Shield, "Problem-Solving": Lightbulb, Collaboration: Users,
+  Adaptability: Rocket, Communication: MessageSquare, Delivery: Target,
+  "Customer Focus": Heart, "Conflict Resolution": Swords, Innovation: Sparkles,
+  "Strategic Thinking": Brain,
 };
 
 const Index = () => {
@@ -100,11 +107,11 @@ const Index = () => {
           </p>
 
           {/* Difficulty filter */}
-          <div className="mb-6">
-            <p className="text-xs uppercase tracking-widest text-muted-foreground font-semibold mb-3">
+          <div className="mb-8">
+            <p className="text-xs uppercase tracking-widest text-muted-foreground font-semibold mb-4">
               Difficulty
             </p>
-            <div className="flex justify-center gap-2">
+            <div className="flex justify-center gap-3">
               {difficulties.map((diff) => {
                 const isActive = selectedDifficulties.includes(diff);
                 const config = difficultyConfig[diff];
@@ -113,13 +120,13 @@ const Index = () => {
                   <button
                     key={diff}
                     onClick={() => toggleDifficulty(diff)}
-                    className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                    className={`group relative flex flex-col items-center gap-1.5 px-5 py-3 rounded-2xl text-sm font-semibold transition-all duration-300 ${
                       isActive
-                        ? `glass gradient-border ${config.color}`
-                        : "glass text-muted-foreground hover:text-foreground"
+                        ? `bg-gradient-to-b ${config.gradient} text-white ${config.shadow} scale-105`
+                        : "glass text-muted-foreground hover:text-foreground hover:scale-105"
                     }`}
                   >
-                    <Icon className="h-3.5 w-3.5" />
+                    <Icon className={`h-5 w-5 transition-transform duration-300 ${isActive ? "scale-110" : "group-hover:scale-110"}`} />
                     {diff}
                   </button>
                 );
@@ -129,22 +136,24 @@ const Index = () => {
 
           {/* Category chips */}
           <div className="mb-8">
-            <p className="text-xs uppercase tracking-widest text-muted-foreground font-semibold mb-3">
+            <p className="text-xs uppercase tracking-widest text-muted-foreground font-semibold mb-4">
               Category
             </p>
             <div className="flex flex-wrap justify-center gap-2">
               {categories.map((cat) => {
                 const isActive = selectedCategories.includes(cat);
+                const Icon = categoryIcons[cat] || Sparkles;
                 return (
                   <button
                     key={cat}
                     onClick={() => toggleCategory(cat)}
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+                    className={`group flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
                       isActive
-                        ? "glass gradient-border text-primary glow-primary"
-                        : "glass text-muted-foreground hover:text-foreground"
+                        ? "bg-primary/20 text-primary border border-primary/30 shadow-[0_0_15px_-3px_hsl(175,70%,50%,0.3)]"
+                        : "bg-secondary/50 border border-border/50 text-muted-foreground hover:text-foreground hover:bg-secondary hover:border-border"
                     }`}
                   >
+                    <Icon className={`h-3.5 w-3.5 shrink-0 transition-colors ${isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground"}`} />
                     {cat}
                   </button>
                 );
