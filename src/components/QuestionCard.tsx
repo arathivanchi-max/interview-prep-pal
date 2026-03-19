@@ -32,9 +32,18 @@ export function QuestionCard({ question, current, total, onNext, onRate }: Quest
     <div className="flex flex-col gap-5 animate-fade-in-up" key={question.id}>
       {/* Header */}
       <div className="flex items-center justify-between">
-        <span className="px-3 py-1 rounded-full glass text-xs font-medium text-primary">
-          {question.category}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="px-3 py-1 rounded-full glass text-xs font-medium text-primary">
+            {question.category}
+          </span>
+          <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${
+            question.difficulty === "Easy" ? "bg-success/15 text-success" :
+            question.difficulty === "Medium" ? "bg-primary/15 text-primary" :
+            "bg-accent/15 text-accent"
+          }`}>
+            {question.difficulty}
+          </span>
+        </div>
         <span className="text-sm text-muted-foreground font-medium tabular-nums">
           {current} / {total}
         </span>
