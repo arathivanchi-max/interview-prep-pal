@@ -151,12 +151,12 @@ const Index = () => {
             <p className="text-[10px] text-muted-foreground/50 mt-2">Swipe to browse</p>
           </div>
 
-          {/* Category chips */}
+          {/* Category icon grid */}
           <div className="mb-8">
             <p className="text-xs uppercase tracking-widest text-muted-foreground font-semibold mb-4">
               Category
             </p>
-            <div className="flex flex-wrap justify-center gap-2">
+            <div className="grid grid-cols-5 gap-2 max-w-[280px] mx-auto">
               {categories.map((cat) => {
                 const isActive = selectedCategories.includes(cat);
                 const Icon = categoryIcons[cat] || Sparkles;
@@ -164,14 +164,19 @@ const Index = () => {
                   <button
                     key={cat}
                     onClick={() => toggleCategory(cat)}
-                    className={`group flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+                    title={cat}
+                    className={`group relative flex flex-col items-center justify-center w-full aspect-square rounded-2xl transition-all duration-300 ${
                       isActive
-                        ? "bg-primary/20 text-primary border border-primary/30 shadow-[0_0_15px_-3px_hsl(175,70%,50%,0.3)]"
-                        : "bg-secondary/50 border border-border/50 text-muted-foreground hover:text-foreground hover:bg-secondary hover:border-border"
+                        ? "bg-primary/20 text-primary border border-primary/30 shadow-[0_0_15px_-3px_hsl(175,70%,50%,0.3)] scale-105"
+                        : "glass text-muted-foreground hover:text-foreground hover:scale-105"
                     }`}
                   >
-                    <Icon className={`h-3.5 w-3.5 shrink-0 transition-colors ${isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground"}`} />
-                    {cat}
+                    <Icon className="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
+                    <span className={`text-[9px] font-medium mt-1 leading-tight text-center transition-opacity duration-200 ${
+                      isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                    }`}>
+                      {cat.length > 10 ? cat.split(/[\s-]/)[0] : cat}
+                    </span>
                   </button>
                 );
               })}
