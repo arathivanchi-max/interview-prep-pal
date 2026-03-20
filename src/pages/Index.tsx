@@ -99,9 +99,9 @@ const Index = () => {
           </div>
 
           <h1 className="text-4xl md:text-5xl font-extrabold mb-3">
-            <span className="gradient-text">Interview</span>
+            <span className="gradient-text">Behavioral</span>
             <br />
-            <span className="text-foreground">Coach</span>
+            <span className="text-foreground">Interview Coach</span>
           </h1>
           <p className="text-muted-foreground text-base mb-10 max-w-xs mx-auto leading-relaxed">
             Practice behavioral questions with a timer, STAR framework, and self-assessment.
