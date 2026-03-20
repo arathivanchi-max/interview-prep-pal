@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { questions, categories, difficulties, Difficulty } from "@/data/questions";
 import { QuestionCard } from "@/components/QuestionCard";
 import { ResultsSummary } from "@/components/ResultsSummary";
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
 import { Mic, Sparkles, Zap, Flame, Brain, Shield, Users, Lightbulb, MessageSquare, Target, Heart, Swords, Rocket, ChevronRight } from "lucide-react";
 
 type Phase = "home" | "practice" | "results";
@@ -114,41 +114,41 @@ const Index = () => {
             </p>
             <Carousel
               opts={{ align: "center", loop: true }}
-              className="w-full max-w-xs mx-auto"
+              className="w-full max-w-[220px] mx-auto"
             >
-              <CarouselContent className="-ml-3">
-                {difficulties.map((diff, i) => {
+              <CarouselContent className="-ml-0">
+                {difficulties.map((diff) => {
                   const isActive = selectedDifficulties.includes(diff);
                   const config = difficultyConfig[diff];
                   const Icon = config.icon;
                   return (
-                    <CarouselItem key={diff} className="pl-3 basis-1/3">
+                    <CarouselItem key={diff} className="pl-0 basis-full">
                       <button
                         onClick={() => toggleDifficulty(diff)}
-                        className={`group relative w-full flex flex-col items-center gap-2 px-3 py-4 rounded-2xl text-sm font-semibold transition-all duration-500 ease-out ${
+                        className={`group relative w-full flex flex-col items-center gap-3 px-6 py-6 rounded-2xl text-base font-bold transition-all duration-500 ease-out ${
                           isActive
                             ? `bg-gradient-to-b ${config.gradient} text-white ${config.shadow} scale-105`
-                            : "glass text-muted-foreground hover:text-foreground hover:scale-105"
+                            : "glass text-muted-foreground hover:text-foreground hover:scale-[1.02]"
                         }`}
-                        style={{ animationDelay: `${i * 120}ms` }}
                       >
-                        <div className={`relative transition-transform duration-500 ${isActive ? "scale-125 rotate-12" : "group-hover:scale-110 group-hover:-rotate-6"}`}>
-                          <Icon className="h-6 w-6" />
+                        <div className={`relative transition-transform duration-500 ${isActive ? "scale-150 rotate-12" : "group-hover:scale-125 group-hover:-rotate-6"}`}>
+                          <Icon className="h-8 w-8" />
                           {isActive && (
-                            <div className="absolute inset-0 animate-pulse-ring rounded-full" style={{ boxShadow: `0 0 12px 4px currentColor` }} />
+                            <div className="absolute inset-0 animate-pulse-ring rounded-full" style={{ boxShadow: `0 0 16px 6px currentColor` }} />
                           )}
                         </div>
-                        <span className="tracking-wide">{diff}</span>
+                        <span className="tracking-widest text-lg">{diff}</span>
                         {isActive && (
-                          <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-6 h-1 rounded-full bg-white/60 animate-scale-up" />
+                          <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-8 h-1 rounded-full bg-white/60 animate-scale-up" />
                         )}
                       </button>
                     </CarouselItem>
                   );
                 })}
               </CarouselContent>
+              <CarouselPrevious className="glass border-border/50 text-muted-foreground hover:text-foreground -left-10" />
+              <CarouselNext className="glass border-border/50 text-muted-foreground hover:text-foreground -right-10" />
             </Carousel>
-            <p className="text-[10px] text-muted-foreground/50 mt-2">Swipe to browse</p>
           </div>
 
           {/* Category icon grid */}
