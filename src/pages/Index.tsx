@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { questions, categories, difficulties, Difficulty } from "@/data/questions";
 import { QuestionCard } from "@/components/QuestionCard";
 import { ResultsSummary } from "@/components/ResultsSummary";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { Mic, Sparkles, Zap, Flame, Brain, Shield, Users, Lightbulb, MessageSquare, Target, Heart, Swords, Rocket, ChevronRight } from "lucide-react";
 
 type Phase = "home" | "practice" | "results";
@@ -106,32 +107,48 @@ const Index = () => {
             Practice behavioral questions with a timer, STAR framework, and self-assessment.
           </p>
 
-          {/* Difficulty filter */}
+          {/* Difficulty filter carousel */}
           <div className="mb-8">
             <p className="text-xs uppercase tracking-widest text-muted-foreground font-semibold mb-4">
               Difficulty
             </p>
-            <div className="flex justify-center gap-3">
-              {difficulties.map((diff) => {
-                const isActive = selectedDifficulties.includes(diff);
-                const config = difficultyConfig[diff];
-                const Icon = config.icon;
-                return (
-                  <button
-                    key={diff}
-                    onClick={() => toggleDifficulty(diff)}
-                    className={`group relative flex flex-col items-center gap-1.5 px-5 py-3 rounded-2xl text-sm font-semibold transition-all duration-300 ${
-                      isActive
-                        ? `bg-gradient-to-b ${config.gradient} text-white ${config.shadow} scale-105`
-                        : "glass text-muted-foreground hover:text-foreground hover:scale-105"
-                    }`}
-                  >
-                    <Icon className={`h-5 w-5 transition-transform duration-300 ${isActive ? "scale-110" : "group-hover:scale-110"}`} />
-                    {diff}
-                  </button>
-                );
-              })}
-            </div>
+            <Carousel
+              opts={{ align: "center", loop: true }}
+              className="w-full max-w-xs mx-auto"
+            >
+              <CarouselContent className="-ml-3">
+                {difficulties.map((diff, i) => {
+                  const isActive = selectedDifficulties.includes(diff);
+                  const config = difficultyConfig[diff];
+                  const Icon = config.icon;
+                  return (
+                    <CarouselItem key={diff} className="pl-3 basis-1/3">
+                      <button
+                        onClick={() => toggleDifficulty(diff)}
+                        className={`group relative w-full flex flex-col items-center gap-2 px-3 py-4 rounded-2xl text-sm font-semibold transition-all duration-500 ease-out ${
+                          isActive
+                            ? `bg-gradient-to-b ${config.gradient} text-white ${config.shadow} scale-105`
+                            : "glass text-muted-foreground hover:text-foreground hover:scale-105"
+                        }`}
+                        style={{ animationDelay: `${i * 120}ms` }}
+                      >
+                        <div className={`relative transition-transform duration-500 ${isActive ? "scale-125 rotate-12" : "group-hover:scale-110 group-hover:-rotate-6"}`}>
+                          <Icon className="h-6 w-6" />
+                          {isActive && (
+                            <div className="absolute inset-0 animate-pulse-ring rounded-full" style={{ boxShadow: `0 0 12px 4px currentColor` }} />
+                          )}
+                        </div>
+                        <span className="tracking-wide">{diff}</span>
+                        {isActive && (
+                          <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-6 h-1 rounded-full bg-white/60 animate-scale-up" />
+                        )}
+                      </button>
+                    </CarouselItem>
+                  );
+                })}
+              </CarouselContent>
+            </Carousel>
+            <p className="text-[10px] text-muted-foreground/50 mt-2">Swipe to browse</p>
           </div>
 
           {/* Category chips */}
