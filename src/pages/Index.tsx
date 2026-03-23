@@ -22,6 +22,7 @@ const categoryIcons: Record<string, typeof Shield> = {
 };
 
 const Index = () => {
+  const { user, signOut } = useAuth();
   const [phase, setPhase] = useState<Phase>("home");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedDifficulties, setSelectedDifficulties] = useState<Difficulty[]>([]);
