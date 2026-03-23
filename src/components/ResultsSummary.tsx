@@ -1,13 +1,22 @@
 import { Badge } from "@/components/ui/badge";
-import { RotateCcw, Star, Trophy, Sparkles } from "lucide-react";
+import { RotateCcw, Star, Trophy, Sparkles, Loader2 } from "lucide-react";
 import { questions } from "@/data/questions";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 interface ResultsSummaryProps {
   ratings: Record<number, number>;
+  selectedCategories: string[];
   onRestart: () => void;
 }
 
-export function ResultsSummary({ ratings, onRestart }: ResultsSummaryProps) {
+export function ResultsSummary({ ratings, selectedCategories, onRestart }: ResultsSummaryProps) {
+  const { user } = useAuth();
+  const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+
   const entries = Object.entries(ratings).map(([id, rating]) => ({
     question: questions.find((q) => q.id === Number(id))!,
     rating,
@@ -16,6 +25,24 @@ export function ResultsSummary({ ratings, onRestart }: ResultsSummaryProps) {
   const avg = entries.length > 0
     ? entries.reduce((sum, e) => sum + e.rating, 0) / entries.length
     : 0;
+
+  useEffect(() => {
+    if (!user || entries.length === 0 || saved) return;
+    
+    const saveSession = async () => {
+      setSaving(true);
+      await supabase.from("practice_sessions").insert({
+        user_id: user.id,
+        avg_rating: Math.round(avg * 100) / 100,
+        questions_count: entries.length,
+        categories: selectedCategories.length > 0 ? selectedCategories : ["All"],
+      });
+      setSaved(true);
+      setSaving(false);
+    };
+
+    saveSession();
+  }, [user, saved]);
 
   const getMessage = () => {
     if (avg >= 4.5) return "Outstanding! You're interview-ready. 🎉";
@@ -71,6 +98,25 @@ export function ResultsSummary({ ratings, onRestart }: ResultsSummaryProps) {
           </div>
           <span className="text-sm text-muted-foreground">/ 5.0</span>
         </div>
+
+        {/* Save status */}
+        {user && (
+          <div className="mt-3 flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
+            {saving ? (
+              <>
+                <Loader2 className="h-3 w-3 animate-spin" />
+                Saving to leaderboard...
+              </>
+            ) : saved ? (
+              <span className="text-primary">✓ Score saved to leaderboard</span>
+            ) : null}
+          </div>
+        )}
+        {!user && (
+          <p className="mt-3 text-xs text-muted-foreground">
+            <Link to="/auth" className="text-primary hover:underline">Sign in</Link> to save your score to the leaderboard
+          </p>
+        )}
       </div>
 
       {/* Question list */}
@@ -105,15 +151,24 @@ export function ResultsSummary({ ratings, onRestart }: ResultsSummaryProps) {
         ))}
       </div>
 
-      {/* Restart button */}
-      <button
-        onClick={onRestart}
-        className="group mx-auto flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-primary-foreground transition-all duration-300 hover:scale-105 glow-primary"
-        style={{ background: "var(--gradient-primary)" }}
-      >
-        <RotateCcw className="h-4 w-4 transition-transform group-hover:-rotate-180 duration-500" />
-        Practice Again
-      </button>
+      {/* Actions */}
+      <div className="flex flex-col items-center gap-3">
+        <button
+          onClick={onRestart}
+          className="group flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-primary-foreground transition-all duration-300 hover:scale-105 glow-primary"
+          style={{ background: "var(--gradient-primary)" }}
+        >
+          <RotateCcw className="h-4 w-4 transition-transform group-hover:-rotate-180 duration-500" />
+          Practice Again
+        </button>
+        <Link
+          to="/leaderboard"
+          className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
+        >
+          <Trophy className="h-3.5 w-3.5" />
+          View Leaderboard
+        </Link>
+      </div>
     </div>
   );
 }

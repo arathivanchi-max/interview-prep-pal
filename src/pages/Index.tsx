@@ -3,8 +3,9 @@ import { questions, categories, difficulties, Difficulty } from "@/data/question
 import { QuestionCard } from "@/components/QuestionCard";
 import { ResultsSummary } from "@/components/ResultsSummary";
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
-import { Mic, Sparkles, Zap, Flame, Brain, Shield, Users, Lightbulb, MessageSquare, Target, Heart, Swords, Rocket, ChevronRight } from "lucide-react";
-
+import { Mic, Sparkles, Zap, Flame, Brain, Shield, Users, Lightbulb, MessageSquare, Target, Heart, Swords, Rocket, ChevronRight, Trophy, LogIn, LogOut } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { Link } from "react-router-dom";
 type Phase = "home" | "practice" | "results";
 
 const difficultyConfig: Record<Difficulty, { icon: typeof Zap; gradient: string; shadow: string; text: string }> = {
@@ -21,6 +22,7 @@ const categoryIcons: Record<string, typeof Shield> = {
 };
 
 const Index = () => {
+  const { user, signOut } = useAuth();
   const [phase, setPhase] = useState<Phase>("home");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedDifficulties, setSelectedDifficulties] = useState<Difficulty[]>([]);
@@ -90,6 +92,24 @@ const Index = () => {
   if (phase === "home") {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12 relative overflow-hidden">
+        {/* Top nav */}
+        <div className="absolute top-4 right-4 flex items-center gap-2 z-20">
+          <Link to="/leaderboard" className="flex items-center gap-1.5 px-3 py-1.5 rounded-full glass text-xs font-medium text-muted-foreground hover:text-foreground transition-colors">
+            <Trophy className="h-3.5 w-3.5" />
+            Leaderboard
+          </Link>
+          {user ? (
+            <button onClick={signOut} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full glass text-xs font-medium text-muted-foreground hover:text-foreground transition-colors">
+              <LogOut className="h-3.5 w-3.5" />
+              Sign Out
+            </button>
+          ) : (
+            <Link to="/auth" className="flex items-center gap-1.5 px-3 py-1.5 rounded-full glass text-xs font-medium text-primary hover:text-foreground transition-colors">
+              <LogIn className="h-3.5 w-3.5" />
+              Sign In
+            </Link>
+          )}
+        </div>
         <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-primary/5 blur-3xl animate-float" />
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full bg-accent/5 blur-3xl animate-float" style={{ animationDelay: "1.5s" }} />
 
@@ -206,7 +226,7 @@ const Index = () => {
     return (
       <div className="min-h-screen flex flex-col items-center px-4 py-12">
         <div className="w-full max-w-lg">
-          <ResultsSummary ratings={ratings} onRestart={handleRestart} />
+          <ResultsSummary ratings={ratings} selectedCategories={selectedCategories} onRestart={handleRestart} />
         </div>
       </div>
     );
