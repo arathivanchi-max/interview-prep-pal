@@ -92,6 +92,23 @@ const Index = () => {
   if (phase === "home") {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12 relative overflow-hidden">
+        {/* Top nav */}
+        <div className="absolute top-4 right-4 flex items-center gap-2 z-20">
+          <Link to="/leaderboard" className="flex items-center gap-1.5 px-3 py-1.5 rounded-full glass text-xs font-medium text-muted-foreground hover:text-foreground transition-colors">
+            <Trophy className="h-3.5 w-3.5" />
+            Leaderboard
+          </Link>
+          {user ? (
+            <button onClick={signOut} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full glass text-xs font-medium text-muted-foreground hover:text-foreground transition-colors">
+              <LogOut className="h-3.5 w-3.5" />
+              Sign Out
+            </button>
+          ) : (
+            <Link to="/auth" className="flex items-center gap-1.5 px-3 py-1.5 rounded-full glass text-xs font-medium text-primary hover:text-foreground transition-colors">
+              <LogIn className="h-3.5 w-3.5" />
+              Sign In
+            </Link>
+          )}
         <div className="absolute top-1/4 left-1/4 w-64 h-64 rounded-full bg-primary/5 blur-3xl animate-float" />
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full bg-accent/5 blur-3xl animate-float" style={{ animationDelay: "1.5s" }} />
 
