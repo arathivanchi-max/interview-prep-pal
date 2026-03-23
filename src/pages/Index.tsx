@@ -3,8 +3,9 @@ import { questions, categories, difficulties, Difficulty } from "@/data/question
 import { QuestionCard } from "@/components/QuestionCard";
 import { ResultsSummary } from "@/components/ResultsSummary";
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
-import { Mic, Sparkles, Zap, Flame, Brain, Shield, Users, Lightbulb, MessageSquare, Target, Heart, Swords, Rocket, ChevronRight } from "lucide-react";
-
+import { Mic, Sparkles, Zap, Flame, Brain, Shield, Users, Lightbulb, MessageSquare, Target, Heart, Swords, Rocket, ChevronRight, Trophy, LogIn, LogOut } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { Link } from "react-router-dom";
 type Phase = "home" | "practice" | "results";
 
 const difficultyConfig: Record<Difficulty, { icon: typeof Zap; gradient: string; shadow: string; text: string }> = {
