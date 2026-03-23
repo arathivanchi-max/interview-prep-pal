@@ -54,9 +54,9 @@ export default function Leaderboard() {
   }, []);
 
   const getRankIcon = (rank: number) => {
-    if (rank === 0) return <Crown className="h-5 w-5 text-amber-400" />;
-    if (rank === 1) return <Medal className="h-5 w-5 text-slate-300" />;
-    if (rank === 2) return <Award className="h-5 w-5 text-amber-600" />;
+    if (rank === 0) return <Crown className="h-5 w-5 text-primary" />;
+    if (rank === 1) return <Medal className="h-5 w-5 text-secondary-foreground" />;
+    if (rank === 2) return <Award className="h-5 w-5 text-accent" />;
     return <span className="text-sm font-bold text-muted-foreground w-5 text-center">{rank + 1}</span>;
   };
 
