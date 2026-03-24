@@ -18,35 +18,14 @@ export default function Leaderboard() {
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
-      const { data, error } = await supabase
-        .from("practice_sessions")
-        .select("user_id, avg_rating, questions_count");
+      const { data, error } = await supabase.rpc("get_leaderboard");
 
       if (error || !data) {
         setLoading(false);
         return;
       }
 
-      // Aggregate by user
-      const map = new Map<string, LeaderboardEntry>();
-      for (const row of data) {
-        const existing = map.get(row.user_id);
-        if (existing) {
-          existing.best_score = Math.max(existing.best_score, Number(row.avg_rating));
-          existing.total_sessions += 1;
-          existing.total_questions += row.questions_count;
-        } else {
-          map.set(row.user_id, {
-            user_id: row.user_id,
-            best_score: Number(row.avg_rating),
-            total_sessions: 1,
-            total_questions: row.questions_count,
-          });
-        }
-      }
-
-      const sorted = [...map.values()].sort((a, b) => b.best_score - a.best_score || b.total_sessions - a.total_sessions);
-      setEntries(sorted);
+      setEntries(data as LeaderboardEntry[]);
       setLoading(false);
     };
 
