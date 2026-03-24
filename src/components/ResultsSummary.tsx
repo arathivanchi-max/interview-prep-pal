@@ -31,11 +31,11 @@ export function ResultsSummary({ ratings, selectedCategories, onRestart }: Resul
     
     const saveSession = async () => {
       setSaving(true);
-      await supabase.from("practice_sessions").insert({
-        user_id: user.id,
-        avg_rating: Math.round(avg * 100) / 100,
-        questions_count: entries.length,
-        categories: selectedCategories.length > 0 ? selectedCategories : ["All"],
+      await supabase.functions.invoke("save-session", {
+        body: {
+          ratings,
+          categories: selectedCategories.length > 0 ? selectedCategories : ["All"],
+        },
       });
       setSaved(true);
       setSaving(false);
