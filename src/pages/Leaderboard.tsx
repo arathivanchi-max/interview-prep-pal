@@ -23,6 +23,13 @@ export default function Leaderboard() {
   const { user } = useAuth();
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [myHash, setMyHash] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (user?.id) {
+      hashUserId(user.id).then(setMyHash);
+    }
+  }, [user?.id]);
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
@@ -47,13 +54,12 @@ export default function Leaderboard() {
     return <span className="text-sm font-bold text-muted-foreground w-5 text-center">{rank + 1}</span>;
   };
 
-  const getAnonymousName = (userId: string) => {
-    const hash = userId.slice(0, 8).toUpperCase();
-    return `Player ${hash.slice(0, 4)}`;
+  const getAnonymousName = (hash: string) => {
+    return `Player ${hash.slice(0, 4).toUpperCase()}`;
   };
 
-  const getInitials = (userId: string) => {
-    return userId.slice(0, 2).toUpperCase();
+  const getInitials = (hash: string) => {
+    return hash.slice(0, 2).toUpperCase();
   };
 
   return (
@@ -91,10 +97,10 @@ export default function Leaderboard() {
         ) : (
           <div className="space-y-2">
             {entries.map((entry, i) => {
-              const isMe = user?.id === entry.user_id;
+              const isMe = myHash === entry.player_hash;
               return (
                 <div
-                  key={entry.user_id}
+                  key={entry.player_hash}
                   className={`flex items-center gap-3 rounded-xl p-4 transition-all ${
                     isMe
                       ? "glass-strong border border-primary/30 shadow-[0_0_20px_-5px_hsl(175,70%,50%,0.2)]"
@@ -106,12 +112,12 @@ export default function Leaderboard() {
                   </div>
 
                   <div className="flex h-9 w-9 items-center justify-center rounded-full bg-secondary text-xs font-bold text-foreground shrink-0">
-                    {getInitials(entry.user_id)}
+                    {getInitials(entry.player_hash)}
                   </div>
 
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-foreground truncate">
-                      {getAnonymousName(entry.user_id)}
+                      {getAnonymousName(entry.player_hash)}
                       {isMe && <span className="text-primary ml-1.5 text-xs">(you)</span>}
                     </p>
                     <p className="text-xs text-muted-foreground">
