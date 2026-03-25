@@ -68,9 +68,9 @@ export type Database = {
         Args: never
         Returns: {
           best_score: number
+          player_hash: string
           total_questions: number
           total_sessions: number
-          user_id: string
         }[]
       }
     }
