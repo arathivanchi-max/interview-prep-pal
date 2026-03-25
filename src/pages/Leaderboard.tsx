@@ -5,10 +5,18 @@ import { Trophy, Crown, Medal, Award, ChevronLeft, Loader2 } from "lucide-react"
 import { Link } from "react-router-dom";
 
 interface LeaderboardEntry {
-  user_id: string;
+  player_hash: string;
   best_score: number;
   total_sessions: number;
   total_questions: number;
+}
+
+async function hashUserId(userId: string): Promise<string> {
+  const data = new TextEncoder().encode(userId);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(hashBuffer))
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("");
 }
 
 export default function Leaderboard() {
